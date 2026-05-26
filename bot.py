@@ -34,16 +34,43 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ── Конфиг ───────────────────────────────────────────────────
-BOT_TOKEN  = os.environ.get('BOT_TOKEN', '')
-ADMIN_ID   = int(os.environ.get('ADMIN_ID', '0') or 0)
-API_URL    = os.environ.get('API_URL', 'https://tgleadwareon.ru').rstrip('/')
-API_SECRET = os.environ.get('API_SECRET', '')
+# ═══════════════════════════════════════════════════════════════════════
+#                          НАСТРОЙКИ — ЗАПОЛНИТЕ ЗДЕСЬ
+# ═══════════════════════════════════════════════════════════════════════
+# ❗ Внимание: эти значения становятся публичными если репозиторий открытый.
+#    Рекомендуется сделать репо ПРИВАТНЫМ в настройках GitHub.
 
-CHANNEL_PUBLIC      = os.environ.get('CHANNEL_PUBLIC',      '@tgleadwareon')
-CHANNEL_PUBLIC_URL  = os.environ.get('CHANNEL_PUBLIC_URL',  'https://t.me/tgleadwareon')
-CHANNEL_PRIVATE     = os.environ.get('CHANNEL_PRIVATE',     '')
-CHANNEL_PRIVATE_URL = os.environ.get('CHANNEL_PRIVATE_URL', 'https://t.me/+NlvOoOBd5Gs0NWNi')
+# Токен бота от @BotFather — обязательно
+BOT_TOKEN = "ВСТАВЬТЕ_ТОКЕН_БОТА_СЮДА"
+
+# Ваш Telegram ID (узнать у @userinfobot) — обязательно
+ADMIN_ID = 0  # например: 5062414502
+
+# URL сайта и секретный ключ для API
+API_URL    = "https://tgleadwareon.ru"
+API_SECRET = "ВСТАВЬТЕ_BOT_MAIN_SECRET_СЮДА"  # значение из /var/www/lead-combine/.env на VPS
+
+# Публичный канал
+CHANNEL_PUBLIC      = "@tgleadwareon"
+CHANNEL_PUBLIC_URL  = "https://t.me/tgleadwareon"
+
+# Приватный канал — оставьте CHANNEL_PRIVATE пустым,
+# добавьте бота админом в канал, бот пришлёт ID в личку → впишите сюда.
+CHANNEL_PRIVATE     = ""             # например: -1002345678901
+CHANNEL_PRIVATE_URL = "https://t.me/+NlvOoOBd5Gs0NWNi"
+
+# ═══════════════════════════════════════════════════════════════════════
+# Если env-переменные всё-таки заданы (например, на другом хостинге) —
+# они переопределят значения выше:
+BOT_TOKEN  = os.environ.get('BOT_TOKEN',  BOT_TOKEN)
+ADMIN_ID   = int(os.environ.get('ADMIN_ID', ADMIN_ID) or 0)
+API_URL    = os.environ.get('API_URL',    API_URL).rstrip('/')
+API_SECRET = os.environ.get('API_SECRET', API_SECRET)
+CHANNEL_PUBLIC      = os.environ.get('CHANNEL_PUBLIC',      CHANNEL_PUBLIC)
+CHANNEL_PUBLIC_URL  = os.environ.get('CHANNEL_PUBLIC_URL',  CHANNEL_PUBLIC_URL)
+CHANNEL_PRIVATE     = os.environ.get('CHANNEL_PRIVATE',     CHANNEL_PRIVATE)
+CHANNEL_PRIVATE_URL = os.environ.get('CHANNEL_PRIVATE_URL', CHANNEL_PRIVATE_URL)
+# ═══════════════════════════════════════════════════════════════════════
 
 REQUIRED_CHANNELS = [
     {'title': 'TG Lead Wareon',  'chat': CHANNEL_PUBLIC,  'url': CHANNEL_PUBLIC_URL},
