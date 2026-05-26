@@ -60,16 +60,26 @@ CHANNEL_PRIVATE     = ""             # например: -1002345678901
 CHANNEL_PRIVATE_URL = "https://t.me/+NlvOoOBd5Gs0NWNi"
 
 # ═══════════════════════════════════════════════════════════════════════
-# Если env-переменные всё-таки заданы (например, на другом хостинге) —
-# они переопределят значения выше:
-BOT_TOKEN  = os.environ.get('BOT_TOKEN',  BOT_TOKEN)
-ADMIN_ID   = int(os.environ.get('ADMIN_ID', ADMIN_ID) or 0)
-API_URL    = os.environ.get('API_URL',    API_URL).rstrip('/')
-API_SECRET = os.environ.get('API_SECRET', API_SECRET)
-CHANNEL_PUBLIC      = os.environ.get('CHANNEL_PUBLIC',      CHANNEL_PUBLIC)
-CHANNEL_PUBLIC_URL  = os.environ.get('CHANNEL_PUBLIC_URL',  CHANNEL_PUBLIC_URL)
-CHANNEL_PRIVATE     = os.environ.get('CHANNEL_PRIVATE',     CHANNEL_PRIVATE)
-CHANNEL_PRIVATE_URL = os.environ.get('CHANNEL_PRIVATE_URL', CHANNEL_PRIVATE_URL)
+# Если env-переменные всё-таки заданы И не пустые — переопределят значения выше:
+BOT_TOKEN  = (os.environ.get('BOT_TOKEN')  or BOT_TOKEN  or '').strip().strip('"').strip("'")
+API_URL    = (os.environ.get('API_URL')    or API_URL    or 'https://tgleadwareon.ru').strip().rstrip('/')
+API_SECRET = (os.environ.get('API_SECRET') or API_SECRET or '').strip().strip('"').strip("'")
+try:
+    ADMIN_ID = int(os.environ.get('ADMIN_ID') or ADMIN_ID or 0)
+except (ValueError, TypeError):
+    ADMIN_ID = 0
+CHANNEL_PUBLIC      = (os.environ.get('CHANNEL_PUBLIC')      or CHANNEL_PUBLIC      or '').strip()
+CHANNEL_PUBLIC_URL  = (os.environ.get('CHANNEL_PUBLIC_URL')  or CHANNEL_PUBLIC_URL  or '').strip()
+CHANNEL_PRIVATE     = (os.environ.get('CHANNEL_PRIVATE')     or CHANNEL_PRIVATE     or '').strip()
+CHANNEL_PRIVATE_URL = (os.environ.get('CHANNEL_PRIVATE_URL') or CHANNEL_PRIVATE_URL or '').strip()
+
+# Валидация перед запуском
+import re
+if not BOT_TOKEN or 'ВСТАВЬТЕ' in BOT_TOKEN or not re.match(r'^\d{6,}:[A-Za-z0-9_-]{30,}$', BOT_TOKEN):
+    print(f'❌ BOT_TOKEN неверный или плейсхолдер. Текущее значение: {BOT_TOKEN!r}')
+    print('   Откройте https://github.com/dzalil206-commits/lead-guide-bot/blob/main/bot.py')
+    print('   В строке BOT_TOKEN = "..." впишите реальный токен от @BotFather')
+    import sys; sys.exit(1)
 # ═══════════════════════════════════════════════════════════════════════
 
 REQUIRED_CHANNELS = [
