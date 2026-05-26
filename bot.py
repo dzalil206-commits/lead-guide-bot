@@ -41,14 +41,14 @@ load_dotenv()
 #    Рекомендуется сделать репо ПРИВАТНЫМ в настройках GitHub.
 
 # Токен бота от @BotFather — обязательно
-BOT_TOKEN = "ВСТАВЬТЕ_ТОКЕН_БОТА_СЮДА"
+BOT_TOKEN = "8983513295:AAHr1rfUWMijC_doOaklqoNwF9F6qLTCr_8"
 
 # Ваш Telegram ID (узнать у @userinfobot) — обязательно
-ADMIN_ID = 0  # например: 5062414502
+ADMIN_ID = 5062414502  # например: 5062414502
 
 # URL сайта и секретный ключ для API
 API_URL    = "https://tgleadwareon.ru"
-API_SECRET = "ВСТАВЬТЕ_BOT_MAIN_SECRET_СЮДА"  # значение из /var/www/lead-combine/.env на VPS
+API_SECRET = "tglw_bot_secret_2026"  # значение из /var/www/lead-combine/.env на VPS
 
 # Публичный канал
 CHANNEL_PUBLIC      = "@tgleadwareon"
