@@ -59,6 +59,11 @@ CHANNEL_PUBLIC_URL  = "https://t.me/tgleadwareon"
 CHANNEL_PRIVATE     = "-1003069533163"             # например: -1002345678901
 CHANNEL_PRIVATE_URL = "https://t.me/+NlvOoOBd5Gs0NWNi"
 
+# Картинка в приветственном сообщении — необязательно.
+# Можно: прямой URL (https://...) ИЛИ file_id (если уже загружали в Telegram).
+# Если пусто — бот отправит только текст.
+WELCOME_IMAGE = ""  # например: "https://tgleadwareon.ru/static/welcome.jpg"
+
 # ═══════════════════════════════════════════════════════════════════════
 # Если env-переменные всё-таки заданы И не пустые — переопределят значения выше:
 BOT_TOKEN  = (os.environ.get('BOT_TOKEN')  or BOT_TOKEN  or '').strip().strip('"').strip("'")
@@ -72,6 +77,7 @@ CHANNEL_PUBLIC      = (os.environ.get('CHANNEL_PUBLIC')      or CHANNEL_PUBLIC  
 CHANNEL_PUBLIC_URL  = (os.environ.get('CHANNEL_PUBLIC_URL')  or CHANNEL_PUBLIC_URL  or '').strip()
 CHANNEL_PRIVATE     = (os.environ.get('CHANNEL_PRIVATE')     or CHANNEL_PRIVATE     or '').strip()
 CHANNEL_PRIVATE_URL = (os.environ.get('CHANNEL_PRIVATE_URL') or CHANNEL_PRIVATE_URL or '').strip()
+WELCOME_IMAGE       = (os.environ.get('WELCOME_IMAGE')       or WELCOME_IMAGE       or '').strip()
 
 # Валидация перед запуском
 import re
@@ -155,11 +161,20 @@ async def cmd_start(message: Message):
         "▸ Статистика собранной базы\n\n"
         "**Условие — подписаться на оба канала ниже и получить бонусную ссылку:**"
     )
-    await message.answer(
-        text,
-        reply_markup=subscribe_keyboard(REQUIRED_CHANNELS),
-        disable_web_page_preview=True,
-    )
+    keyboard = subscribe_keyboard(REQUIRED_CHANNELS)
+
+    # С картинкой, если задано WELCOME_IMAGE; иначе обычный текст
+    if WELCOME_IMAGE:
+        try:
+            await message.answer_photo(
+                photo=WELCOME_IMAGE,
+                caption=text,
+                reply_markup=keyboard,
+            )
+            return
+        except Exception as e:
+            log.warning(f'Не удалось отправить фото ({WELCOME_IMAGE}): {e}. Шлю текст.')
+    await message.answer(text, reply_markup=keyboard, disable_web_page_preview=True)
 
 
 @dp.callback_query(F.data == 'check')
