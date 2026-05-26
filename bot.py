@@ -26,6 +26,7 @@ from aiogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     ChatMemberUpdated,
+    FSInputFile,
 )
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -60,9 +61,12 @@ CHANNEL_PRIVATE     = "-1003069533163"             # например: -10023456
 CHANNEL_PRIVATE_URL = "https://t.me/+NlvOoOBd5Gs0NWNi"
 
 # Картинка в приветственном сообщении — необязательно.
-# Можно: прямой URL (https://...) ИЛИ file_id (если уже загружали в Telegram).
-# Если пусто — бот отправит только текст.
-WELCOME_IMAGE = ""  # например: "https://tgleadwareon.ru/static/welcome.jpg"
+# Поддерживается:
+#   1. Локальный файл из репозитория:   "welcome.jpg"
+#   2. Прямой URL картинки:             "https://example.com/img.jpg"
+#   3. file_id Telegram:                "AgACAgIA..."
+# Если пусто — отправляется только текст.
+WELCOME_IMAGE = "welcome.jpg"
 
 # ═══════════════════════════════════════════════════════════════════════
 # Если env-переменные всё-таки заданы И не пустые — переопределят значения выше:
@@ -166,8 +170,14 @@ async def cmd_start(message: Message):
     # С картинкой, если задано WELCOME_IMAGE; иначе обычный текст
     if WELCOME_IMAGE:
         try:
+            # Если файл существует локально → шлём как файл из репо
+            # Иначе считаем URL или file_id
+            if os.path.isfile(WELCOME_IMAGE):
+                photo = FSInputFile(WELCOME_IMAGE)
+            else:
+                photo = WELCOME_IMAGE
             await message.answer_photo(
-                photo=WELCOME_IMAGE,
+                photo=photo,
                 caption=text,
                 reply_markup=keyboard,
             )
