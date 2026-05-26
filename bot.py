@@ -150,6 +150,18 @@ def subscribe_keyboard(channels):
     return InlineKeyboardMarkup(inline_keyboard=btns)
 
 
+async def edit_message_smart(message: Message, text: str, reply_markup=None):
+    """Универсальный editor — работает и с фото-сообщениями (caption), и с текстовыми."""
+    try:
+        if message.photo or message.video or message.document:
+            await message.edit_caption(caption=text, reply_markup=reply_markup)
+        else:
+            await message.edit_text(text=text, reply_markup=reply_markup)
+    except TelegramBadRequest as e:
+        log.warning(f'edit failed ({e}), sending new message')
+        await message.answer(text, reply_markup=reply_markup, disable_web_page_preview=True)
+
+
 # ── Хендлеры ─────────────────────────────────────────────────
 @dp.message(Command('start'))
 async def cmd_start(message: Message):
@@ -201,15 +213,13 @@ async def cb_check(query: CallbackQuery):
             '\n'.join(f"▸ {c['title']}" for c in not_subbed) +
             "\n\nПодпишитесь и нажмите кнопку ещё раз."
         )
-        try:
-            await query.message.edit_text(text, reply_markup=subscribe_keyboard(not_subbed))
-        except TelegramBadRequest:
-            pass
+        await edit_message_smart(query.message, text, reply_markup=subscribe_keyboard(not_subbed))
         return
 
     url = request_bonus_url(user_id)
     if not url:
-        await query.message.edit_text(
+        await edit_message_smart(
+            query.message,
             "⚠️ Не удалось сгенерировать ссылку. Попробуйте через минуту "
             "или напишите в поддержку @TGLeadSupportBot."
         )
@@ -226,7 +236,7 @@ async def cb_check(query: CallbackQuery):
         "💡 Ссылка работает один раз. Поделитесь с тем, кому нужен Miner — "
         "пусть подпишется на каналы и получит свою."
     )
-    await query.message.edit_text(text, disable_web_page_preview=True)
+    await edit_message_smart(query.message, text)
 
 
 @dp.message(Command('myid'))
