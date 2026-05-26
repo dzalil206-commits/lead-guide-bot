@@ -56,7 +56,7 @@ CHANNEL_PUBLIC_URL  = "https://t.me/tgleadwareon"
 
 # Приватный канал — оставьте CHANNEL_PRIVATE пустым,
 # добавьте бота админом в канал, бот пришлёт ID в личку → впишите сюда.
-CHANNEL_PRIVATE     = ""             # например: -1002345678901
+CHANNEL_PRIVATE     = "-1003069533163"             # например: -1002345678901
 CHANNEL_PRIVATE_URL = "https://t.me/+NlvOoOBd5Gs0NWNi"
 
 # ═══════════════════════════════════════════════════════════════════════
